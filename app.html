@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ChickMath - Backyard Chicken Math That Holds Up</title>
+<meta name="description" content="Coop space, roost bars, nesting boxes, feed bags, egg production by age, cost per dozen and brooder warmth - honest numbers for the backyard flock.">
+<meta name="theme-color" content="#b3541e">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='0.9em' font-size='90'%3E%F0%9F%90%94%3C/text%3E%3C/svg%3E">
+<style>
+:root{
+  --bg:#221510; --card:#2e1d16; --ink:#f5e8d8; --muted:#c9a98c;
+  --accent:#e8873a; --accent2:#f2c14e; --line:#5a3d2c; --good:#8fd18a; --warn:#f2c14e; --bad:#e86a5a;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--ink);font:16px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;padding:1rem}
+.wrap{max-width:760px;margin:0 auto}
+header{text-align:center;padding:1.6rem 0 1.2rem}
+h1{font-size:2.1rem;color:var(--accent2);letter-spacing:.5px}
+.tag{color:var(--muted);margin-top:.3rem;font-size:.98rem}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:1.1rem 1.2rem;margin:1rem 0}
+.card h2{font-size:1.05rem;color:var(--accent);margin-bottom:.7rem}
+.row{display:flex;flex-wrap:wrap;gap:.9rem;align-items:flex-end;margin:.5rem 0}
+.field{display:flex;flex-direction:column;gap:.25rem}
+label{font-size:.8rem;color:var(--muted)}
+input{background:#241610;color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:.45rem .6rem;font-size:1rem;width:8.5rem}
+input:focus{outline:2px solid var(--accent)}
+button{background:var(--accent);color:#221510;border:0;border-radius:8px;padding:.5rem 1.1rem;font-size:.95rem;font-weight:700;cursor:pointer}
+button:hover{background:#f09a55}
+.presets{display:flex;flex-wrap:wrap;gap:.5rem;margin:.6rem 0 .2rem}
+.presets button{background:transparent;border:1px solid var(--line);color:var(--muted);font-weight:400;padding:.35rem .8rem;font-size:.85rem}
+.presets button:hover{border-color:var(--accent);color:var(--ink)}
+.result{margin-top:.6rem;font-size:1rem;min-height:1.4rem}
+.result small{color:var(--muted);display:block;margin-top:.25rem}
+.verdict-ok{color:var(--good)} .verdict-tight{color:var(--warn)} .verdict-bad{color:var(--bad)}
+hr{border:0;border-top:1px dashed var(--line);margin:1rem 0}
+.era{font-size:.85rem;color:var(--muted);margin-bottom:.6rem;font-style:italic}
+footer{margin:2rem 0 1rem;font-size:.8rem;color:var(--muted);border-top:1px solid var(--line);padding-top:1rem}
+footer code{color:var(--accent)}
+details{margin-top:.4rem} summary{cursor:pointer;color:var(--muted);font-size:.85rem}
+table{border-collapse:collapse;margin-top:.5rem;font-size:.9rem}
+td,th{border:1px solid var(--line);padding:.3rem .6rem;text-align:left}
+th{color:var(--accent)}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+<h1>&#128020; ChickMath</h1>
+<p class="tag">Backyard chicken math that holds up. Space, feed, eggs, warmth - numbers you can plan a flock on.</p>
+</header>
+
+<section class="card" id="c-flock">
+<h2>How many birds fit?</h2>
+<p class="era">Give it your coop floor space and your dream flock. It tells you what fits and what the flock actually needs.</p>
+<div class="row">
+  <div class="field"><label for="in-coop">coop floor (sq ft)</label><input id="in-coop" type="number" min="0" step="1" value="40"></div>
+  <div class="field"><label for="in-birds">birds you want</label><input id="in-birds" type="number" min="1" step="1" value="6"></div>
+</div>
+<button id="btn-flock">Plan my flock</button>
+<div class="result" id="out-flock"></div>
+</section>
+
+<section class="card" id="c-house">
+<h2>House &amp; feed</h2>
+<p class="era">Coop, run, roost bars and nesting boxes, plus the feed bill - the standing math of keeping birds.</p>
+<div class="presets" id="presets-house"></div>
+<div class="row">
+  <div class="field"><label for="in-hbirds">birds</label><input id="in-hbirds" type="number" min="1" step="1" value="6"></div>
+</div>
+<button id="btn-house">House &amp; feed math</button>
+<div class="result" id="out-house"></div>
+</section>
+
+<section class="card" id="c-eggs">
+<h2>Egg production</h2>
+<p class="era">Laying declines with age. See what a hen year actually looks like, and what your eggs cost you in feed.</p>
+<div class="row">
+  <div class="field"><label for="in-hens">laying hens</label><input id="in-hens" type="number" min="1" step="1" value="4"></div>
+  <div class="field"><label for="in-age">flock age (years)</label><input id="in-age" type="number" min="1" max="8" step="1" value="1"></div>
+  <div class="field"><label for="in-feed">feed price ($/lb)</label><input id="in-feed" type="number" min="0.1" max="2" step="0.05" value="0.40"></div>
+</div>
+<button id="btn-eggs">Egg math</button>
+<div class="result" id="out-eggs"></div>
+</section>
+
+<section class="card" id="c-brood">
+<h2>Brooder warmth</h2>
+<p class="era">Chicks start at 95&deg;F and the lamp drops 5&deg;F a week until they're feathered. Here's the week by week.</p>
+<div class="row">
+  <div class="field"><label for="in-week">chick age (weeks)</label><input id="in-week" type="number" min="0" max="8" step="1" value="2"></div>
+</div>
+<button id="btn-brood">Brooder temp</button>
+<button id="btn-brood-table" style="background:transparent;border:1px solid var(--line);color:var(--muted);font-weight:400">Full 0-8 week table</button>
+<div class="result" id="out-brood"></div>
+</section>
+
+<section class="card" id="c-why">
+<h2>Why these numbers</h2>
+<details><summary>The assumptions, stated honestly</summary>
+<table>
+<tr><th>Constant</th><th>Value</th><th>Why</th></tr>
+<tr><td>Coop space</td><td>4 sq ft / bird</td><td>The widely used minimum for standard breeds; less and pecking starts</td></tr>
+<tr><td>Run space</td><td>10 sq ft / bird</td><td>Birds that can move lay better and fight less</td></tr>
+<tr><td>Roost bar</td><td>10 in / bird</td><td>Chickens sleep shoulder to shoulder, but not stacked</td></tr>
+<tr><td>Nesting boxes</td><td>1 per 4 hens</td><td>They share, but one box per hen is a waste</td></tr>
+<tr><td>Feed</td><td>0.25 lb / bird / day</td><td>A laying hen eats about a quarter pound of layer feed daily</td></tr>
+<tr><td>Peak laying</td><td>5.5 eggs / hen / week</td><td>Good layers in year one; year two drops ~15%, and so on</td></tr>
+<tr><td>Brooder</td><td>95&deg;F, minus 5&deg;F / week</td><td>Until fully feathered, around 6 weeks; 65&deg;F floor</td></tr>
+</table>
+<p style="margin-top:.5rem;color:var(--muted);font-size:.85rem">Bantams need less, big heritage breeds more. Production varies by breed, daylight and stress - the math plans, the hens decide.</p>
+</details>
+</section>
+
+<footer>
+<p><strong>ChickMath</strong> - part of the App Factory collection. Honest small tools, one good idea at a time.</p>
+</footer>
+</div>
+<script src="engine.js"></script>
+<script>
+(function () {
+  function $(id) { return document.getElementById(id); }
+  function num(id) { return parseFloat($(id).value) || 0; }
+  function esc(s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;'); }
+
+  $('btn-flock').addEventListener('click', function () {
+    var coop = num('in-coop'), birds = Math.max(1, Math.round(num('in-birds')));
+    var maxB = ChickEngine.maxBirds(coop);
+    var v = ChickEngine.spaceVerdict(birds, coop);
+    var cls = /room to spare/.test(v) ? 'verdict-ok' : (/tight/.test(v) ? 'verdict-tight' : 'verdict-bad');
+    $('out-flock').innerHTML =
+      '<span class="big">' + maxB + ' birds</span> fit in ' + coop + ' sq ft (4 sq ft each).<br>' +
+      '<span class="' + cls + '">' + esc(v) + '</span>' +
+      '<small>' + birds + ' birds want ' + ChickEngine.coopSqft(birds) + ' sq ft of coop and ' +
+      ChickEngine.runSqft(birds) + ' sq ft of run - ' + (ChickEngine.coopSqft(birds) + ChickEngine.runSqft(birds)) + ' sq ft of footprint all told.</small>';
+  });
+
+  $('btn-house').addEventListener('click', function () {
+    var b = Math.max(1, Math.round(num('in-hbirds')));
+    $('out-house').innerHTML =
+      b + ' birds need <span class="big">' + ChickEngine.coopSqft(b) + ' sq ft</span> of coop, ' +
+      '<span class="big">' + ChickEngine.runSqft(b) + ' sq ft</span> of run, ' +
+      ChickEngine.roostBars(b) + ' roost bar(s) of 4 ft (' + ChickEngine.roostInches(b) + ' in total) and ' +
+      ChickEngine.nestingBoxes(b) + ' nesting box(es).<br>' +
+      'They eat <span class="big">' + ChickEngine.feedLbPerDay(b) + ' lb a day</span> (' +
+      ChickEngine.feedLbPerWeek(b) + ' lb a week) - a 50 lb bag lasts <span class="big">' + ChickEngine.bagDays(b) + ' days</span>.' +
+      '<small>Oyster shell and grit on the side; layer feed is the number above.</small>';
+  });
+
+  $('btn-eggs').addEventListener('click', function () {
+    var hens = Math.max(1, Math.round(num('in-hens')));
+    var age = Math.max(1, Math.round(num('in-age')));
+    var price = num('in-feed') || 0.4;
+    var wk = ChickEngine.eggsPerWeek(hens, age);
+    var cost = ChickEngine.costPerDozen(hens, age, price);
+    $('out-eggs').innerHTML =
+      'A year-' + age + ' flock of ' + hens + ' lays about <span class="big">' + wk + ' eggs a week</span> (' +
+      ChickEngine.dozenPerWeek(hens, age) + ' dozen; ~' + ChickEngine.eggsPerYear(hens, age).toLocaleString() + ' a year).<br>' +
+      'At $' + price.toFixed(2) + '/lb feed, those eggs cost you about <span class="big">$' + cost.toFixed(2) + ' per dozen</span> in feed.' +
+      '<small>Feed only - no coop, bedding, or your Saturday mornings priced in. Year one is the peak; expect ~15% less each year after.</small>';
+  });
+
+  $('btn-brood').addEventListener('click', function () {
+    var w = Math.max(0, Math.round(num('in-week')));
+    var t = ChickEngine.brooderTempF(w);
+    $('out-brood').innerHTML = 'Week ' + w + ' chicks want about <span class="big">' + t + '&deg;F</span> under the lamp.' +
+      '<small>' + (t <= 65 ? 'Fully feathered - they can hold their own around 65&deg;F.' : 'Watch the chicks, not the thermometer: huddled tight is cold, spread out and panting is hot.') + '</small>';
+  });
+
+  $('btn-brood-table').addEventListener('click', function () {
+    var rows = '';
+    for (var w = 0; w <= 8; w++) rows += '<tr><td>' + w + '</td><td>' + ChickEngine.brooderTempF(w) + '&deg;F</td></tr>';
+    $('out-brood').innerHTML = '<table><tr><th>Week</th><th>Under the lamp</th></tr>' + rows + '</table>' +
+      '<small>Start at 95&deg;F, drop 5&deg;F each week, 65&deg;F floor once feathered.</small>';
+  });
+
+  /* presets */
+  var presets = [['Starter trio', 3], ['Family six', 6], ['Egg business dozen', 12]];
+  var holder = $('presets-house');
+  presets.forEach(function (p) {
+    var b = document.createElement('button');
+    b.textContent = p[0] + ' (' + p[1] + ')';
+    b.addEventListener('click', function () { $('in-hbirds').value = p[1]; $('btn-house').click(); });
+    holder.appendChild(b);
+  });
+
+  /* run the defaults so the page isn't blank */
+  $('btn-flock').click();
+  $('btn-house').click();
+  $('btn-eggs').click();
+  $('btn-brood').click();
+})();
+</script>
+</body>
+</html>
